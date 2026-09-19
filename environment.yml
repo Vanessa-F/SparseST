@@ -1,0 +1,38 @@
+# Curated environment. For a byte-exact reproduction of the machine these results were
+# produced on, use environment.lock.yml instead:
+#
+#   conda env create -n SparseST -f environment.lock.yml
+#
+# Note the CUDA mismatch is intentional and works: PyTorch is built against CUDA 11.8
+# while spconv ships a CUDA 12.0 build. If you change the PyTorch CUDA version, pick the
+# matching spconv wheel (spconv-cu118, spconv-cu120, ...).
+
+name: SparseST
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+
+dependencies:
+  - python=3.10.14
+  - pytorch=2.2.2
+  - pytorch-cuda=11.8
+  - torchvision=0.17.2
+  - torchaudio=2.2.2
+  - numpy=1.26.4
+  - scipy=1.15.2
+  - pyyaml=6.0.2
+  - tqdm=4.67.1
+  - matplotlib=3.9.1
+  - pandas=2.3.0
+  - scikit-learn=1.6.1
+  - gpytorch=1.14
+  - botorch=0.14.0
+  - jupyter
+  - pip
+  - pip:
+      # CUDA-specific wheels, not available on conda-forge.
+      - spconv-cu120==2.3.6
+      - thop==0.1.1.post2209072238
+      # This package itself.
+      - -e .

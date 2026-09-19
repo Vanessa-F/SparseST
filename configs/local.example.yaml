@@ -1,0 +1,18 @@
+# Machine-specific overrides.
+#
+# Copy to configs/local.yaml and edit. It is merged on top of whichever config you pass
+# to --config, so keep only the keys you actually need to change. configs/local.yaml is
+# gitignored.
+#
+# Equivalent one-off overrides:
+#   SPARSEST_DATA_ROOT=/path/to/data   sparsest-train --config configs/ipad.yaml
+#   SPARSEST_OUTPUT_ROOT=/scratch/runs sparsest-train --config configs/ipad.yaml
+
+data:
+  # Point at wherever the dataset actually lives on this machine. The paths inside the
+  # dataset config (mod_image/..., 2_digit/...) are resolved against this.
+  root: /absolute/path/to/dataset
+
+output:
+  # Checkpoints and logs are large; keep them off the repo volume if space is tight.
+  root: /absolute/path/to/runs

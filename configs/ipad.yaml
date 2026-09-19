@@ -1,0 +1,74 @@
+# IPAD video anomaly detection.
+#
+# Paths under `data` are relative to `data.root`. Override that root without editing
+# this file by setting SPARSEST_DATA_ROOT, or by copying configs/local.example.yaml to
+# configs/local.yaml, which is merged on top of this file.
+
+dataset: ipad
+seed: 123
+
+# 21-frame clips, RGB.
+window: 21
+input_channels: 3
+batch_size: 16
+
+# Preference weight for reconstruction error; 1 - w_mse weights occupancy.
+w_mse: 0.75
+mode: train
+debug_unit: false
+
+model:
+  features: [8, 16, 32, 64]   # encoder widths; the decoder mirrors these back down
+  shape: [64, 64]
+  filter_size: 5
+
+data:
+  root: data/ipad
+  train: mod_image/train/total_train.npy
+  valid: mod_image/valid/total_valid.npy
+  # One recorded sequence per evaluation run; override with --checkpoint's companion
+  # SPARSEST_TEST_NPY, or sweep with scripts/eval_sweep.sh.
+  test: mod_image/test/type_1/npy/007_mod.npy
+
+output:
+  root: runs/ipad
+  checkpoints: checkpoints
+  gp_models: gp_model
+  figures: figures
+  metrics: output_metrics.jsonl
+
+train:
+  lr: 8.0e-4
+  epochs: 250
+  begin_valid: 150
+  step: 5                     # iterations between threshold updates
+  fp16: true
+  resume: null
+
+eval:
+  mode: anomaly_score
+  checkpoint: null
+  visualize_batches: 2
+
+search:
+  gp_iter: 10                 # Bayesian-optimisation rounds
+  gp_steps: 100               # Adam steps per GP refit
+  gp_lr: 0.1
+  # Initial design. null bootstraps from output.metrics, keeping the last record per
+  # weight -- run the initial sweep first. Point at a JSON file of
+  # [{"w", "mse", "occupancy"}, ...] to supply a fixed design instead.
+  seed_points: null
+  candidate_start: 0.05
+  candidate_stop: 1.05
+  candidate_step: 0.05
+  # Trials are shorter than a full run; the search only needs a comparable ranking.
+  trial:
+    epochs: 200
+    batch_size: 12
+    begin_valid: 180
+    fp16: true
+
+distributed:
+  backend: nccl
+  master_addr: localhost
+  master_port: 12355

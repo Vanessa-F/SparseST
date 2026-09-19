@@ -1,0 +1,21 @@
+# Pinned to the versions these results were produced with.
+#
+# spconv and torch are CUDA-version specific and are NOT installed from this file.
+# Install them first, matching your driver:
+#
+#   pip install torch==2.2.2 --index-url https://download.pytorch.org/whl/cu118
+#   pip install spconv-cu120==2.3.6
+#
+# See README.md for the conda alternative.
+
+numpy==1.26.4
+scipy==1.15.2
+pyyaml==6.0.2
+tqdm==4.67.1
+matplotlib==3.9.1
+gpytorch==1.14
+
+# Analysis notebooks only.
+botorch==0.14.0
+scikit-learn==1.6.1
+pandas==2.3.0

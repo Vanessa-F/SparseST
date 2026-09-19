@@ -1,0 +1,74 @@
+# Moving-MNIST next-frame prediction.
+#
+# Paths under `data` are relative to `data.root`. Override that root without editing
+# this file by setting SPARSEST_DATA_ROOT, or by copying configs/local.example.yaml to
+# configs/local.yaml, which is merged on top of this file.
+
+dataset: moving_mnist
+seed: 123
+
+# 20-frame sequences, consumed as a 10-frame clip predicting the next 10. Grayscale.
+window: 10
+input_channels: 1
+batch_size: 32
+
+# Preference weight for reconstruction error; 1 - w_mse weights occupancy.
+w_mse: 1.0
+mode: train
+debug_unit: false
+
+model:
+  features: [8, 16, 32, 64]   # encoder widths; the decoder mirrors these back down
+  shape: [64, 64]
+  filter_size: 5
+
+data:
+  root: data/moving_mnist
+  # Train and validation are index slices of the same array.
+  train: 2_digit/train.npy
+  test: 2_digit/test.npy
+  train_split: [0, 8000]
+  valid_split: [8000, 10000]
+
+output:
+  root: runs/mnist
+  checkpoints: checkpoints
+  gp_models: gp_model
+  figures: figures
+  metrics: output_metrics.jsonl
+
+train:
+  lr: 8.0e-4
+  epochs: 250
+  begin_valid: 230
+  step: 5                     # iterations between threshold updates
+  fp16: true
+  resume: null
+
+eval:
+  mode: test_loss
+  checkpoint: null
+  visualize_batches: 2
+
+search:
+  gp_iter: 10                 # Bayesian-optimisation rounds
+  gp_steps: 100               # Adam steps per GP refit
+  gp_lr: 0.1
+  # Initial design. null bootstraps from output.metrics, keeping the last record per
+  # weight -- run the initial sweep first. Point at a JSON file of
+  # [{"w", "mse", "occupancy"}, ...] to supply a fixed design instead.
+  seed_points: null
+  candidate_start: 0.05
+  candidate_stop: 1.05
+  candidate_step: 0.05
+  # Trials are shorter than a full run; the search only needs a comparable ranking.
+  trial:
+    epochs: 200
+    batch_size: 32
+    begin_valid: 180
+    fp16: true
+
+distributed:
+  backend: nccl
+  master_addr: localhost
+  master_port: 12355

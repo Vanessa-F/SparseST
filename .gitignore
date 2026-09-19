@@ -1,0 +1,30 @@
+# Machine-specific config (copy from configs/local.example.yaml)
+configs/local.yaml
+configs/local.*.yaml
+!configs/local.example.yaml
+
+# Run outputs: checkpoints, GP states, metrics, figures, logs
+runs/
+*.pt
+*.pth
+*.pth.tar
+*.log
+
+# Datasets (they live outside the repo; see configs/local.example.yaml)
+*.npy
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.eggs/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Editors / OS
+.DS_Store
+.vscode/
+.idea/
