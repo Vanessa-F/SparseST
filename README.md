@@ -1,7 +1,4 @@
-# SparseST
-
-Learned delta thresholds for sparse spatio-temporal prediction, with multi-objective
-search over the accuracy/sparsity trade-off.
+# SparseST: Exploiting Data Sparsity in Spatiotemporal Modeling and Prediction
 
 A ConvLSTM wastes work recomputing dense convolutions on inputs that barely changed
 between frames. SparseST feeds each gate convolution the *change* since the last step and
