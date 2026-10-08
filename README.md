@@ -152,7 +152,7 @@ Resolved highest precedence first: command-line flags, then `SPARSEST_DATA_ROOT`
 | `search.seed_points` | `null` bootstraps the design from `output_metrics.jsonl` |
 | `search.trial` | shorter training settings used for each search round |
 
-Worth knowing:
+Notes:
 
 - Every improvement in validation loss writes its own checkpoint, so a long run produces
   many gigabytes. Keep the best per weight, or point `output.root` at scratch space.
