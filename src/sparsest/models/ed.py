@@ -10,10 +10,6 @@ class ED(nn.Module):
     with both the number of cells and the unroll length. Dividing by ``n_cells * window``
     turns them back into per-cell-per-timestep means, which is what the multi-objective
     loss and the reported occupancy expect.
-
-    The original per-dataset code hardcoded this divisor as ``168`` for IPAD
-    (8 cells x window 21) and ``80`` for Moving-MNIST (8 cells x window 10); computing it
-    keeps those values correct while letting ``window`` change.
     """
 
     def __init__(self, encoder, decoder, window):
