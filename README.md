@@ -75,8 +75,7 @@ pip install -r requirements.txt && pip install -e .
 python tests/run_all.py             # verify
 ```
 
-`environment.lock.yml` is a full export if you need an exact match. A CUDA device is
-required; the cell allocates state at a fixed batch size, so loaders use `drop_last=True`
+A CUDA device is required; the cell allocates state at a fixed batch size, so loaders use `drop_last=True`
 and the batch size must stay constant within a run.
 
 ## Data
