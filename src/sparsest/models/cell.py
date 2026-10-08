@@ -17,10 +17,6 @@ import spconv.pytorch as spconv
 
 def signed_shrink(delta, threshold):
     """Zero out sub-threshold changes and shrink the rest toward zero.
-
-    ``relu(d - t) - relu(-d - t)`` leaves ``0`` wherever ``|d| <= t`` and otherwise
-    returns ``d`` reduced in magnitude by ``t``, keeping its sign. Unlike a ``where``
-    mask it is differentiable in ``threshold``, which is what lets the search learn it.
     """
     return torch.relu(delta - threshold) - torch.relu(-delta - threshold)
 
@@ -92,10 +88,6 @@ class SparseST(nn.Module):
 
     def clamp_thresholds(self):
         """Clamp thresholds to be non-negative.
-
-        A negative threshold would *widen* the delta rather than shrink it, inverting
-        the sparsity objective. This runs outside the autograd graph so it is safe on
-        leaf parameters.
         """
         with torch.no_grad():
             self.threshold_x.clamp_(min=0.0)
